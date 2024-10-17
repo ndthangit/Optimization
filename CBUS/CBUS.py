@@ -1,8 +1,6 @@
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 import sys
-
-
 def create_data_model():
     data = {}
     # Read number of passengers and vehicle capacity
@@ -50,6 +48,7 @@ manager = pywrapcp.RoutingIndexManager(
     len(data["distance"]), data["num_vehicles"], data["depot"]
 )
 routing = pywrapcp.RoutingModel(manager)
+
 # demand_callback_index = routing.RegisterUnaryTransitCallback(data["curCapacity"])
 
 # routing.AddDimensionWithVehicleCapacity(
@@ -73,7 +72,7 @@ transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 # Define cost of each arc.
 routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 
-routing.AddDimension()
+
 
 # Setting first solution heuristic.
 search_parameters = pywrapcp.DefaultRoutingSearchParameters()
