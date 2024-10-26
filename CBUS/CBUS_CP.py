@@ -37,8 +37,8 @@ y = [model.NewIntVar(0, 2* n, 'y(' + str(i) + ')') for i in range(2 * n + 1)]
 u = [model.NewIntVar(0,data['capacity'] , 'u(' + str(i) + ')') for i in range(2 * n + 1)]
 
 for i in range(2 * n + 1):
-    model.Add(sum(x[i][j] for j in range(2 * n + 1) if i != j) == 1)
-    model.Add(sum(x[j][i] for j in range(2 * n + 1) if i != j) == 1)
+    model.Add(sum(x[i][j] for j in range(2 * n + 1 )) == 1)
+    model.Add(sum(x[j][i] for j in range(2 * n + 1) )== 1)
 
 model.Add(u[0] == 0)
 model.Add(y[0] == 0)
@@ -47,9 +47,9 @@ model.Add(y[0] == 0)
 for i in range(1,n + 1):
     model.Add(y[i] < y[i + n])
 
-# # Capacity constraints
-# for i in range(2 * n + 1):
-#     model.Add(u[i] <= data['capacity'])
+# Capacity constraints
+for i in range(2 * n + 1):
+    model.Add(u[i] <= data['capacity'])
 
 # Subtour elimination constraints to ensure a valid route
 for i in range(2 * n + 1):
@@ -76,6 +76,8 @@ purpose = sum(data['distance'][i][j] * x[i][j] for i in range(2 * n + 1) for j i
 model.Minimize(purpose)
 solver = cp_model.CpSolver()
 solution = solver.Solve(model)
+# solver.parameters.search_branching = cp_model.FIXED_SEARCH
+
 
 if solution == cp_model.OPTIMAL:
     print(int(solver.ObjectiveValue()))

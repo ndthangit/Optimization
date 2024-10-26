@@ -105,7 +105,7 @@ search_parameters = pywrapcp.DefaultRoutingSearchParameters()
 
 
 search_parameters.first_solution_strategy = (
-    routing_enums_pb2.FirstSolutionStrategy.SEQUENTIAL_CHEAPEST_INSERTION
+    routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION
 )
 
 # Solve the problem.

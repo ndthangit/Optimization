@@ -6,9 +6,9 @@ def create_data_model():
 
     [data['num_clients'], data['num_vehicles'], data['capacity']] = [int(x) for x in sys.stdin.readline().split()]
 
-    requests = [int(x) for x in sys.stdin.readline().split()]
-    requests.insert(0, 0)
-    data['requests'] = requests
+    demands = [int(x) for x in sys.stdin.readline().split()]
+    demands.insert(0, 0)
+    data['demands'] = demands
     distances = []
     for i in range(data['num_clients'] + 1):
         distances.append(list(map(int, sys.stdin.readline().split())))
@@ -26,13 +26,13 @@ def main():
     """Entry point of the program."""
     # Instantiate the data problem.
     data = create_data_model()
-    # print(data['requests'])
+    # print(data['demands'])
     # print(data['distance_matrix'])
     # print(data['vehicle_capacities'])
 
     # Create the routing index manager.
     manager = pywrapcp.RoutingIndexManager(
-        len(data["distance_matrix"]), data["num_vehicles"], data["depot"]
+        len(data['distance_matrix']), data['num_vehicles'], data['depot']
     )
 
     # Create Routing Model.
@@ -55,7 +55,7 @@ def main():
     def demand_callback(from_index):
         """Returns the demand of the node."""
         from_node = manager.IndexToNode(from_index)
-        return data["requests"][from_node]
+        return data['demands'][from_node]
 
     demand_callback_index = routing.RegisterUnaryTransitCallback(demand_callback)
 
@@ -72,11 +72,13 @@ def main():
     search_parameters.first_solution_strategy = (
         routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
     )
-    search_parameters.local_search_metaheuristic = (
-        routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
-    )
-    # search_parameters.time_limit.FromSeconds(1)
-    search_parameters.solution_limit = 100
+
+    # search_parameters.local_search_metaheuristic = (
+    #     routing_enums_pb2.LocalSearchMetaheuristic.TABU_SEARCH
+    # )
+
+    # search_parameters.time_limit.FromSeconds(2)
+    search_parameters.solution_limit = 20
     # Solve the problem.
     solution = routing.SolveWithParameters(search_parameters)
 
